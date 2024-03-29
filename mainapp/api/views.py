@@ -1,4 +1,5 @@
 from mainapp.models import Movie
+from rest_framework import  status
 from .serializers import MovieSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -18,27 +19,38 @@ def movie_list(request):
             serializer.save()
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
 @api_view(["GET", 'PUT', 'DELETE'])
 def movie_detail(request, pk):
     if request.method == 'GET':
-        movie = Movie.objects.get(pk=pk)
+        try:
+            movie = Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            return Response({"message":"there is no movie with this id"}, status=status.HTTP_404_NOT_FOUND)
+            
         serializer = MovieSerializer(instance=movie)
         return Response(serializer.data)
     
     if request.method == 'PUT':
-        movie = Movie.objects.get(pk=pk)
+        try:
+            movie = Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            return Response({"message":"there is no movie with this id"}, status=status.HTTP_404_NOT_FOUND)
         serializer = MovieSerializer(instance=movie, data= request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     if request.method == 'DELETE':
-        movie = Movie.objects.get(pk=pk)
+        try:
+            movie = Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            return Response({"message":"there is no movie with this id"}, status=status.HTTP_404_NOT_FOUND)
         movie.delete()
-        return Response()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
         
