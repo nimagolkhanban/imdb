@@ -17,6 +17,15 @@ class MovieSerializer(serializers.Serializer):
         instance.save()
         return instance
         
+    def validate(self, data):
+        if data["name"] == data["descrption"]:
+            raise serializers.ValidationError("name and description should be diffrent")
+        else:
+            return data
         
+    def validate_name(self, value):
+        if len(value) < 2 :
+            raise serializers.ValidationError("name is to short")
+        else:
+            return value
         
-    
