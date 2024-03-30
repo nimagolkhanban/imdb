@@ -3,7 +3,7 @@ from django.urls import path, include
 from mainapp.api import views
 
 urlpatterns = [
-    path('list/', views.movie_list, name='movie-list'),
-    path('<int:pk>/', views.movie_detail , name='movie_detail'),
+    path('list/', views.MovieListAV.as_view(), name='movie-list'),
+    path('<int:pk>/', views.MovieDetailAV.as_view() , name='movie_detail'),
     
 ]
