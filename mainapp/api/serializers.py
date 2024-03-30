@@ -1,9 +1,15 @@
 from rest_framework import serializers
 from mainapp.models import Movie
 
+
+def name_valid(data):
+    if data == "admin":
+        raise serializers.ValidationError("name should not be admin")
+    else:
+        return data
 class MovieSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField()
+    name = serializers.CharField(validators=[name_valid])
     description = serializers.CharField()
     active = serializers.BooleanField()
     
@@ -18,7 +24,7 @@ class MovieSerializer(serializers.Serializer):
         return instance
         
     def validate(self, data):
-        if data["name"] == data["descrption"]:
+        if data["name"] == data["description"]:
             raise serializers.ValidationError("name and description should be diffrent")
         else:
             return data
