@@ -25,6 +25,21 @@ class MovieSerializer(serializers.ModelSerializer):
         else:
             return value    
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 # class MovieSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)
 #     name = serializers.CharField(validators=[name_valid])
