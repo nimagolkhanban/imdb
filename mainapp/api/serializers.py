@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from mainapp.models import WatchList, StreamPlatform
+from mainapp.models import WatchList, StreamPlatform, Review
 
 
 def name_valid(data):
@@ -8,7 +8,15 @@ def name_valid(data):
     else:
         return data
     
+    
+class RevieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = "__all__"
+        
+   
 class WatchListSerializer(serializers.ModelSerializer):
+    reviews = RevieSerializer(many=True, read_only=True)
     # len_name = serializers.SerializerMethodField()
     class Meta:
         model = WatchList
@@ -30,14 +38,16 @@ class WatchListSerializer(serializers.ModelSerializer):
     #     return length
          
         
-class StreamPlatformSerializer(serializers.ModelSerializer):
+class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
+    # watchlists = WatchListSerializer(many=True,read_only=True)
     class Meta:
-        models = StreamPlatform
+        model = StreamPlatform
         fields = "__all__"
         
         
         
-        
+
+                
         
         
         

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core import validators
 # Create your models here.
 
 class StreamPlatform(models.Model):
@@ -13,6 +13,7 @@ class StreamPlatform(models.Model):
 
 class WatchList(models.Model):
     title = models.CharField(max_length= 100)
+    platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, related_name= "watchlists")
     story_line = models.CharField(max_length=300)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add= True)
@@ -22,4 +23,15 @@ class WatchList(models.Model):
     def __str__(self):
         return self.title
     
+
+class Review(models.Model):
+    rating = models.PositiveIntegerField(validators=[validators.MinValueValidator(1),validators.MaxValueValidator(5)])
+    description = models.CharField(max_length=300, null=True)
+    watchlist= models.ForeignKey(WatchList, on_delete = models.CASCADE, related_name= "reviews")
+    created = models.DateTimeField(auto_now_add = True)
+    update = models.DateTimeField(auto_now= True)
+    active = models.BooleanField(default=True)
     
+    def __str__(self):
+        return self.watchlist.title +" - rate " + str(self.rating)
+     
