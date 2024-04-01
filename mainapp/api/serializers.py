@@ -12,7 +12,8 @@ def name_valid(data):
 class RevieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = "__all__"
+        # fields = "__all__" because i have the watchlist data in view 
+        exclude = ("watchlist", )
         
    
 class WatchListSerializer(serializers.ModelSerializer):
