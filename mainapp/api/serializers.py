@@ -10,6 +10,7 @@ def name_valid(data):
     
     
 class RevieSerializer(serializers.ModelSerializer):
+    review_user = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Review
         # fields = "__all__" because i have the watchlist data in view 

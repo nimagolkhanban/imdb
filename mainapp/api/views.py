@@ -6,15 +6,23 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
-
+from rest_framework.exceptions import ValidationError
 
 class ReciewCreate(generics.CreateAPIView):
     serializer_class= RevieSerializer
     
+    def get_queryset(self):
+        return Review.objects.all()
+    
     def perform_create(self, serializer):
         pk = self.kwargs.get("pk")
         movie = WatchList.objects.get(pk=pk)
-        serializer.save(watchlist=movie)
+        user = self.request.user
+        review_user = Review.objects.filter(watchlist=movie, review_user= user)
+        if review_user.exists():
+            raise ValidationError("you can only submit one review in each movie")
+        
+        serializer.save(watchlist=movie, review_user=user)
         
     
 

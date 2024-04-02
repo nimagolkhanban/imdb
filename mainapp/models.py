@@ -1,7 +1,7 @@
 from django.db import models
 from django.core import validators
 # Create your models here.
-
+from django.contrib.auth.models import User
 class StreamPlatform(models.Model):
     name = models.CharField(max_length=100)
     about = models.CharField(max_length=150)
@@ -26,6 +26,7 @@ class WatchList(models.Model):
 
 class Review(models.Model):
     rating = models.PositiveIntegerField(validators=[validators.MinValueValidator(1),validators.MaxValueValidator(5)])
+    review_user = models.ForeignKey(User, on_delete = models.CASCADE)
     description = models.CharField(max_length=300, null=True)
     watchlist= models.ForeignKey(WatchList, on_delete = models.CASCADE, related_name= "reviews")
     created = models.DateTimeField(auto_now_add = True)
