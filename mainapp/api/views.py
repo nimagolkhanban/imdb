@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
-
+from mainapp.api.permissions import AdminOrReadOnly, ReviewUserReadOnly
 class ReciewCreate(generics.CreateAPIView):
     serializer_class= RevieSerializer
     
@@ -37,6 +37,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = RevieSerializer
+    permission_classes = [ReviewUserReadOnly]
     
 
 
