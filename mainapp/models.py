@@ -17,6 +17,8 @@ class WatchList(models.Model):
     story_line = models.CharField(max_length=300)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add= True)
+    avg_rating = models.FloatField(default=0)
+    rating_count = models.IntegerField(default=0)
     
     
     

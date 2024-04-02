@@ -21,7 +21,13 @@ class ReciewCreate(generics.CreateAPIView):
         review_user = Review.objects.filter(watchlist=movie, review_user= user)
         if review_user.exists():
             raise ValidationError("you can only submit one review in each movie")
-        
+        if movie.rating_count == 0:
+            movie.avg_rating = serializer.validated_data["rating"]
+        else:
+            movie.avg_rating = (serializer.validated_data["rating"]+ movie.avg_rating)/2
+        movie.rating_count +=1
+        movie.save()
+            
         serializer.save(watchlist=movie, review_user=user)
         
     
