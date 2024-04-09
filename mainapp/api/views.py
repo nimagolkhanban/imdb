@@ -34,6 +34,7 @@ class ReciewCreate(generics.CreateAPIView):
 
 class ReviewList(generics.ListAPIView):
     serializer_class = RevieSerializer
+    permission_classes = [AdminOrReadOnly]
     def get_queryset(self):
         pk = self.kwargs.get("pk")
         return Review.objects.filter(watchlist=pk)
@@ -43,7 +44,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = RevieSerializer
-    permission_classes = [ReviewUserReadOnly]
+    permission_classes = [AdminOrReadOnly]
     
 
 
@@ -71,6 +72,7 @@ class WatchListAV(APIView):
     def get(self, request):
         movies = WatchList.objects.all()
         serializer = WatchListSerializer(instance= movies, many=True)
+        
         return Response(serializer.data) 
     
     def post(self, request):
