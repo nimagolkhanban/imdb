@@ -8,6 +8,22 @@ from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
 from mainapp.api.permissions import AdminOrReadOnly, ReviewUserReadOnly
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+
+class UserReview(generics.ListAPIView):
+    serializer_class = RevieSerializer
+    
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        return Review.objects.filter(review_user__username=username)
+    
+    # def get_queryset(self):
+    #     username = self.request.query_params.get("username", None)
+    #     if username :
+    #         return Review.objects.filter(review_user__username=username)
+    #     return Response("invalid username", status=status.HTTP_404_NOT_FOUND)
+    #remember for this filtering method you should delete the username in url file 
+
 class ReciewCreate(generics.CreateAPIView):
     serializer_class= RevieSerializer
     
@@ -34,7 +50,9 @@ class ReciewCreate(generics.CreateAPIView):
 
 class ReviewList(generics.ListAPIView):
     serializer_class = RevieSerializer
-    permission_classes = [AdminOrReadOnly]
+    # permission_classes = [AdminOrReadOnly]
+    throttle_classes = [AnonRateThrottle]
+    
     def get_queryset(self):
         pk = self.kwargs.get("pk")
         return Review.objects.filter(watchlist=pk)
